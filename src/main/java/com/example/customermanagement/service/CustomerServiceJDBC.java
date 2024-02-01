@@ -14,6 +14,7 @@ public class CustomerServiceJDBC implements CustomerService {
     private final String INSERT_CUSTOMER_SQL = "insert into customers(name,email,address) value(?,?,?);";
     private final String UPDATE_CUSTOMER_SQL = "update customers set name=?,email=?,address=? where id=?";
     private final String FIND_CUSTOMER_BY_ID = "select * from customers where id = ?;";
+    private final String REMOVE_CUSTOMER_BY_ID = "delete from customers where id = ?;";
     Connection getConnection(){
         Connection connection = null;
         try {
@@ -102,6 +103,12 @@ public class CustomerServiceJDBC implements CustomerService {
     @Override
     public void remote(int id) {
         Connection connection =getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_CUSTOMER_BY_ID);
+            preparedStatement.setInt(1,id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -27,9 +27,12 @@
             </tr>
             <tr>
                 <td><input type="submit" value="Delete customer"></td>
-                <td><a href="/customers">Back to customer list</a></td>
+                <td><button><a href="http://localhost:8080/customers">Back to customer list</a></button>
+                    </td>
+<%--                <td><a href="/customers">Back to customer list</a></td>--%>
             </tr>
         </table>
     </fieldset>
+</form>
 </body>
 </html>
