@@ -12,7 +12,8 @@ public class CustomerServiceJDBC implements CustomerService {
     private final String jdbcPassword = "1234";
     private final String SELECT_ALL_USERS = "select * from customers;";
     private final String INSERT_CUSTOMER_SQL = "insert into customers(name,email,address) value(?,?,?);";
-    private final String
+    private final String UPDATE_CUSTOMER_SQL = "update customers set name=?,email=?,address=? where id=?";
+    private final String FIND_CUSTOMER_BY_ID = "select * from customers where id = ?;";
     Connection getConnection(){
         Connection connection = null;
         try {
@@ -65,16 +66,42 @@ public class CustomerServiceJDBC implements CustomerService {
 
     @Override
     public Customer findById(int id) {
-        return null;
+        Connection connection = getConnection();
+        Customer customer = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_CUSTOMER_BY_ID);
+            preparedStatement.setInt(1,id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String address = rs.getString("address");
+                customer = new Customer(name,email,address);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return customer;
     }
 
     @Override
     public void update(int id, Customer customer) {
+        Connection connection = getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CUSTOMER_SQL);
+            preparedStatement.setString(1,customer.getName());
+            preparedStatement.setString(2,customer.getEmail());
+            preparedStatement.setString(3,customer.getAddress());
+            preparedStatement.setInt(4,id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
-
     @Override
     public void remote(int id) {
-
+        Connection connection =getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement();
     }
 }
