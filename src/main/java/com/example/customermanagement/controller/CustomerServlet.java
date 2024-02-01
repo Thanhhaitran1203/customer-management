@@ -3,6 +3,7 @@ package com.example.customermanagement.controller;
 import com.example.customermanagement.model.Customer;
 import com.example.customermanagement.service.CustomerService;
 import com.example.customermanagement.service.CustomerServiceImpl;
+import com.example.customermanagement.service.CustomerServiceJDBC;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +16,8 @@ import java.util.List;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = "/customers")
 public class CustomerServlet extends HttpServlet {
-    private final CustomerService customerService = new CustomerServiceImpl();
+//    private final CustomerService customerService = new CustomerServiceImpl();
+    private final CustomerService customerService = new CustomerServiceJDBC();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
