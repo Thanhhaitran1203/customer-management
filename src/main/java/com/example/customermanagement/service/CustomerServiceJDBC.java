@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerServiceJDBC implements CustomerService {
-    private String jdbcURL = "jdbc:mysql://localhost:3306/customer";
-    private String jdbcUserName = "root";
-    private String jdbcPassword = "1234";
-    private String SELECT_ALL_USERS = "select * from customers";
+    private final String jdbcURL = "jdbc:mysql://localhost:3306/customer";
+    private final String jdbcUserName = "root";
+    private final String jdbcPassword = "1234";
+    private final String SELECT_ALL_USERS = "select * from customers;";
+    private final String INSERT_CUSTOMER_SQL = "insert into customers(name,email,address) value(?,?,?);";
+    private final String
     Connection getConnection(){
         Connection connection = null;
         try {
@@ -30,7 +32,6 @@ public class CustomerServiceJDBC implements CustomerService {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
-            System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()){
                 int id = rs.getInt("id");
@@ -47,6 +48,18 @@ public class CustomerServiceJDBC implements CustomerService {
 
     @Override
     public void save(Customer customer) {
+    Connection connection = getConnection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(INSERT_CUSTOMER_SQL);
+            preparedStatement.setString(1,customer.getName());
+            preparedStatement.setString(2,customer.getEmail());
+            preparedStatement.setString(3,customer.getAddress());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
 
     }
 
